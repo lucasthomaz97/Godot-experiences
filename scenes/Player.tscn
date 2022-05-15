@@ -1,0 +1,47 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://scripts/Player.gd" type="Script" id=1]
+[ext_resource path="res://scenes/pause/PauseScreen.tscn" type="PackedScene" id=2]
+
+[sub_resource type="SpatialMaterial" id=3]
+albedo_color = Color( 0, 0, 0, 1 )
+
+[sub_resource type="SphereShape" id=1]
+
+[sub_resource type="SpatialMaterial" id=2]
+albedo_color = Color( 0, 0.372549, 0.592157, 1 )
+
+[node name="Player" type="KinematicBody"]
+script = ExtResource( 1 )
+SPEED = 5
+
+[node name="PauseScreen" parent="." instance=ExtResource( 2 )]
+
+[node name="SpringArm" type="SpringArm" parent="."]
+transform = Transform( 1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, -0.45, 0 )
+spring_length = 200.0
+margin = 0.0
+
+[node name="CSGCylinder2" type="CSGCylinder" parent="SpringArm"]
+transform = Transform( 0.5, 0, 0, 0, -2.18557e-09, 0.5, 0, -0.05, -2.18557e-08, 0, 0, 0 )
+height = 0.1
+material = SubResource( 3 )
+
+[node name="Mesh" type="CollisionShape" parent="."]
+transform = Transform( 0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0 )
+shape = SubResource( 1 )
+
+[node name="CSGCylinder" type="CSGCylinder" parent="Mesh"]
+radius = 0.923552
+height = 1.91674
+material = SubResource( 2 )
+
+[node name="Pivot" type="SpringArm" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0 )
+spring_length = 10.0
+
+[node name="Camera" type="Camera" parent="Pivot"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.806542 )
+current = true
+
+[node name="Anim" type="AnimationPlayer" parent="."]

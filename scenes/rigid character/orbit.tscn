@@ -1,0 +1,19 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://scenes/rigid character/orbit.gd" type="Script" id=1]
+
+[sub_resource type="SphereShape" id=26]
+
+[node name="Area" type="Area"]
+transform = Transform( 3, 0, 0, 0, 3, 0, 0, 0, 3, 0, 0, 0 )
+space_override = 3
+gravity_point = true
+gravity_vec = Vector3( 0, 0, 0 )
+gravity = 50.0
+script = ExtResource( 1 )
+
+[node name="CollisionShape" type="CollisionShape" parent="."]
+shape = SubResource( 26 )
+
+[connection signal="body_entered" from="." to="." method="_on_Area_body_entered"]
+[connection signal="body_exited" from="." to="." method="_on_Area_body_exited"]

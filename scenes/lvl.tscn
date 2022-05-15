@@ -1,0 +1,220 @@
+[gd_scene load_steps=27 format=2]
+
+[ext_resource path="res://scenes/rigid character/character_rigid.tscn" type="PackedScene" id=1]
+[ext_resource path="res://scenes/ice_physics.tres" type="PhysicsMaterial" id=2]
+[ext_resource path="res://scenes/ice.tres" type="Material" id=3]
+[ext_resource path="res://scenes/rough.tres" type="PhysicsMaterial" id=4]
+[ext_resource path="res://scenes/platform.tres" type="Material" id=5]
+[ext_resource path="res://scenes/moving_platform.tres" type="Material" id=6]
+[ext_resource path="res://scenes/moving.gd" type="Script" id=7]
+[ext_resource path="res://scenes/rigid character/orbit.tscn" type="PackedScene" id=8]
+
+[sub_resource type="BoxShape" id=6]
+
+[sub_resource type="CubeMesh" id=7]
+
+[sub_resource type="SpatialMaterial" id=8]
+params_diffuse_mode = 4
+params_specular_mode = 3
+albedo_color = Color( 1, 0.52549, 0, 1 )
+
+[sub_resource type="BoxShape" id=4]
+
+[sub_resource type="SpatialMaterial" id=9]
+
+[sub_resource type="CubeMesh" id=5]
+material = SubResource( 9 )
+
+[sub_resource type="BoxShape" id=10]
+
+[sub_resource type="CubeMesh" id=11]
+
+[sub_resource type="BoxShape" id=15]
+
+[sub_resource type="CubeMesh" id=16]
+
+[sub_resource type="BoxShape" id=17]
+
+[sub_resource type="CubeMesh" id=18]
+
+[sub_resource type="BoxShape" id=20]
+
+[sub_resource type="CubeMesh" id=21]
+
+[sub_resource type="Animation" id=22]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:translation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Vector3( 16.2854, 9.515, 31.3853 ) ]
+}
+
+[sub_resource type="Animation" id=23]
+resource_name = "move"
+length = 5.0
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:translation")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 2.5, 5 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ Vector3( 16.2854, 9.515, 31.3853 ), Vector3( 49.8251, 9.515, 31.3853 ), Vector3( 16.2854, 9.515, 31.3853 ) ]
+}
+
+[sub_resource type="SphereShape" id=24]
+
+[sub_resource type="SphereMesh" id=25]
+radial_segments = 16
+rings = 16
+
+[node name="Spatial" type="Spatial"]
+
+[node name="RigidBody" parent="." instance=ExtResource( 1 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 24.0103, 14.6941, 0 )
+mode = 0
+
+[node name="RigidBody2" type="RigidBody" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 7.70948, 11.44, 0 )
+collision_layer = 2
+mass = 0.5
+
+[node name="CollisionShape" type="CollisionShape" parent="RigidBody2"]
+shape = SubResource( 6 )
+
+[node name="MeshInstance" type="MeshInstance" parent="RigidBody2/CollisionShape"]
+mesh = SubResource( 7 )
+material/0 = SubResource( 8 )
+
+[node name="StaticBody" type="StaticBody" parent="."]
+transform = Transform( 55.6479, 0, 0, 0, 1.0381, 0, 0, 0, 57.5927, 0, 0, 0 )
+physics_material_override = ExtResource( 4 )
+
+[node name="CollisionShape" type="CollisionShape" parent="StaticBody"]
+shape = SubResource( 4 )
+
+[node name="MeshInstance" type="MeshInstance" parent="StaticBody/CollisionShape"]
+mesh = SubResource( 5 )
+material/0 = null
+
+[node name="StaticBody2" type="StaticBody" parent="."]
+transform = Transform( 51.2064, 0, 0, 0, 1, 0, 0, 0, 58.6617, 107.522, 0, 0 )
+physics_material_override = ExtResource( 2 )
+
+[node name="CollisionShape" type="CollisionShape" parent="StaticBody2"]
+shape = SubResource( 10 )
+
+[node name="MeshInstance" type="MeshInstance" parent="StaticBody2/CollisionShape"]
+mesh = SubResource( 11 )
+material/0 = ExtResource( 3 )
+
+[node name="StaticBody3" type="StaticBody" parent="."]
+transform = Transform( 3.71015, 0, 0, 0, 1, 0, 0, 0, 4.8263, 0, 7.76867, 2.99804 )
+physics_material_override = ExtResource( 4 )
+
+[node name="CollisionShape" type="CollisionShape" parent="StaticBody3"]
+shape = SubResource( 15 )
+
+[node name="MeshInstance" type="MeshInstance" parent="StaticBody3/CollisionShape"]
+mesh = SubResource( 16 )
+material/0 = ExtResource( 5 )
+
+[node name="StaticBody4" type="StaticBody" parent="."]
+transform = Transform( 3.71015, 0, 0, 0, 1, 0, 0, 0, 4.8263, 0, 7.76867, -18.053 )
+physics_material_override = ExtResource( 4 )
+
+[node name="CollisionShape" type="CollisionShape" parent="StaticBody4"]
+shape = SubResource( 15 )
+
+[node name="MeshInstance" type="MeshInstance" parent="StaticBody4/CollisionShape"]
+mesh = SubResource( 16 )
+material/0 = ExtResource( 5 )
+
+[node name="StaticBody5" type="StaticBody" parent="."]
+transform = Transform( 3.71015, 0, 0, 0, 1, 0, 0, 0, 4.8263, -12.6316, 11.1792, -7.02361 )
+physics_material_override = ExtResource( 4 )
+
+[node name="CollisionShape" type="CollisionShape" parent="StaticBody5"]
+shape = SubResource( 15 )
+
+[node name="MeshInstance" type="MeshInstance" parent="StaticBody5/CollisionShape"]
+mesh = SubResource( 16 )
+material/0 = ExtResource( 5 )
+
+[node name="StaticBody6" type="StaticBody" parent="."]
+transform = Transform( 3.71015, 0, 0, 0, 1, 0, 0, 0, 4.8263, -28.3985, 11.1792, -7.02361 )
+physics_material_override = ExtResource( 4 )
+
+[node name="CollisionShape" type="CollisionShape" parent="StaticBody6"]
+shape = SubResource( 15 )
+
+[node name="MeshInstance" type="MeshInstance" parent="StaticBody6/CollisionShape"]
+mesh = SubResource( 16 )
+material/0 = ExtResource( 5 )
+
+[node name="StaticBody7" type="StaticBody" parent="."]
+transform = Transform( 3.71015, 0, 0, 0, 1, 0, 0, 0, 4.8263, -28.3985, 15.4724, 12.6647 )
+physics_material_override = ExtResource( 4 )
+
+[node name="CollisionShape" type="CollisionShape" parent="StaticBody7"]
+shape = SubResource( 15 )
+
+[node name="MeshInstance" type="MeshInstance" parent="StaticBody7/CollisionShape"]
+mesh = SubResource( 16 )
+material/0 = ExtResource( 5 )
+
+[node name="StaticBody8" type="StaticBody" parent="."]
+transform = Transform( 10.1405, 0.198686, -1.32654, -4.60539, 0.487534, 0.254089, 4.91212, 0.0469268, 2.97672, -7.63911, 17.3907, 24.7293 )
+physics_material_override = ExtResource( 2 )
+
+[node name="CollisionShape" type="CollisionShape" parent="StaticBody8"]
+shape = SubResource( 17 )
+
+[node name="MeshInstance" type="MeshInstance" parent="StaticBody8/CollisionShape"]
+mesh = SubResource( 18 )
+material/0 = ExtResource( 3 )
+
+[node name="moving" type="RigidBody" parent="."]
+transform = Transform( 3.68192, 0, 0, 0, 1, 0, 0, 0, 2.97667, 16.2854, 9.515, 31.3853 )
+mode = 3
+script = ExtResource( 7 )
+
+[node name="CollisionShape" type="CollisionShape" parent="moving"]
+shape = SubResource( 20 )
+
+[node name="MeshInstance" type="MeshInstance" parent="moving/CollisionShape"]
+mesh = SubResource( 21 )
+material/0 = ExtResource( 6 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="moving"]
+method_call_mode = 1
+anims/RESET = SubResource( 22 )
+anims/move = SubResource( 23 )
+
+[node name="StaticBody9" type="StaticBody" parent="."]
+transform = Transform( 20, 0, 0, 0, 20, 0, 0, 0, 20, -81.4628, 57.3076, 19.88 )
+physics_material_override = ExtResource( 4 )
+
+[node name="CollisionShape" type="CollisionShape" parent="StaticBody9"]
+transform = Transform( 1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 0, 0, 0 )
+shape = SubResource( 24 )
+
+[node name="MeshInstance" type="MeshInstance" parent="StaticBody9/CollisionShape"]
+mesh = SubResource( 25 )
+material/0 = null
+
+[node name="Area" parent="StaticBody9" instance=ExtResource( 8 )]
+gravity = 150.0
+linear_damp = 10.0
+angular_damp = 20.0

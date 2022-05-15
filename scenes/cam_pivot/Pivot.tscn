@@ -1,0 +1,18 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://scenes/cam_pivot/Pivot.gd" type="Script" id=1]
+[ext_resource path="res://scenes/pause/PauseScreen.tscn" type="PackedScene" id=2]
+
+[node name="Pivot" type="SpringArm"]
+spring_length = 7.0
+margin = 0.1
+script = ExtResource( 1 )
+y_sens = 0.8
+x_sens = 0.8
+
+[node name="PauseScreen" parent="." instance=ExtResource( 2 )]
+
+[node name="Camera" type="Camera" parent="."]
+current = true
+near = 0.01
+far = 300.0
