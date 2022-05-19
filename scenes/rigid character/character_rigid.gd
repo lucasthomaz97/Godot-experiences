@@ -17,8 +17,6 @@ var is_jumping : bool = false
 var raw_input : Vector2 = Vector2.ZERO
 var fwd_bwd : float = 0
 var lft_rgt : float = 0
-var cam_basis_x : Vector3 = Vector3.ZERO
-var cam_basis_z : Vector3 = Vector3.ZERO
 var on_orbit : bool = false
 var on_floor : bool = false
 var gravity_center : Vector3 = Vector3.ZERO
@@ -41,10 +39,10 @@ func set_original_y() -> void:
 	transform.basis.y = lerp(transform.basis.y, original_y, rotation_weight*get_physics_process_delta_time())
 	
 func align_with_gravity() -> void:
-	var gravitate: Vector3 = (gravity_center - global_transform.origin).normalized()
+	var gravitate = (gravity_center - global_transform.origin).normalized()
 	var left_axis = -gravitate.cross($Mesh.rotation)
 	var rotation_basis := Basis(left_axis, -gravitate, $Mesh.rotation).orthonormalized()
-	transform.basis = transform.basis.get_rotation_quat().slerp(rotation_basis, get_physics_process_delta_time()*rotation_weight)
+	global_transform.basis = global_transform.basis.get_rotation_quat().slerp(rotation_basis, get_physics_process_delta_time()*rotation_weight)
 
 func get_input_camera_oriented()->Vector3:
 	fwd_bwd = Input.get_action_strength("move_bwd")-Input.get_action_strength("move_fwd")
@@ -55,10 +53,7 @@ func get_input_camera_oriented()->Vector3:
 	input.x = raw_input.x * sqrt(1.0 - raw_input.y * raw_input.y/2)
 	input.z = raw_input.y * sqrt(1.0 - raw_input.x * raw_input.x/2)
 	
-	var final_input = cam_basis_z * input.z
-	final_input += cam_basis_x * input.x
-	
-	final_input = transform.basis.xform(final_input)
+	var final_input = $impulse.global_transform.basis.orthonormalized().xform(input)
 	return final_input.normalized()
 
 func is_on_floor(state: PhysicsDirectBodyState) -> bool:
@@ -69,7 +64,7 @@ func is_on_floor(state: PhysicsDirectBodyState) -> bool:
 	return false
 
 func jump() -> bool:
-	apply_central_impulse(transform.basis.xform(Vector3.UP*(jump_force*1 if !on_orbit else jump_force* on_gravity_multi_jump)))
+	apply_central_impulse($impulse.global_transform.basis.xform(Vector3.UP*(jump_force if !on_orbit else jump_force* on_gravity_multi_jump+linear_velocity.length())))
 	return true
 	
 func controlability(state: PhysicsDirectBodyState)-> float:
@@ -83,13 +78,12 @@ func _physics_process(delta)-> void:
 	$Mesh.rotation.y = lerp_angle($Mesh.rotation.y, atan2(move_dir.x, move_dir.z), delta*turn_weight) if !(move_dir.x == 0 and move_dir.z == 0) else $Mesh.rotation.y
 	
 func _process(delta):
-	cam_basis_z = Vector3(camera.transform.basis.z.x,0, camera.transform.basis.z.z)
-	cam_basis_x = Vector3(camera.transform.basis.x.x,0, camera.transform.basis.x.z)
+	$impulse.rotation_degrees.y = camera.rotation_degrees.y
 
 func _integrate_forces(state: PhysicsDirectBodyState) -> void:
 	on_floor = is_on_floor(state) or $Mesh/RayCast.is_colliding()
 	move_dir = get_input_camera_oriented()
-	last_strong_direction = move_dir.normalized() if move_dir.length() > min_strong_len else last_strong_direction
+	#last_strong_direction = move_dir.normalized() if move_dir.length() > min_strong_len else last_strong_direction
 	add_central_force(move_dir*move_speed*controlability(state))
 	is_jumping = jump() if on_floor and Input.is_action_pressed("jump") else false
 	state.linear_velocity.x = clamp(state.linear_velocity.x, -max_speed, max_speed)
